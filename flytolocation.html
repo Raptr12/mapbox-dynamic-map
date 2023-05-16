@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Listado de Puntos por Localizar</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+<style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      color: #404040;
+      font: 400 15px/22px 'Source Sans Pro', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+  
+    h1 {
+      font-size: 22px;
+      margin: 0;
+      font-weight: 400;
+      line-height: 20px;
+      padding: 20px 2px;
+    }
+  
+    a {
+      color: #404040;
+      text-decoration: none;
+    }
+  
+    a:hover {
+      color: #101010;
+    }
+  
+    .sidebar {
+      position: absolute;
+      width: 33.3333%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      border-right: 1px solid rgba(0, 0, 0, 0.25);
+    }
+  
+    .map {
+      position: absolute;
+      left: 33.3333%;
+      width: 66.6666%;
+      top: 0;
+      bottom: 0;
+    }
+  
+    .heading {
+      background: #fff;
+      border-bottom: 1px solid #eee;
+      height: 60px;
+      line-height: 60px;
+      padding: 0 10px;
+    }
+
+    .listings {
+    height: 100%;
+    overflow: auto;
+    padding-bottom: 60px;
+    }
+
+    .listings .item {
+    padding: 10px;
+    text-decoration: none;
+    border-bottom: 1px solid #eee;
+    }
+
+    .listings .item:last-child {
+    border-bottom: none;
+    }
+
+    .listings .item .title {
+    display: block;
+    color: #B80202;
+    font-weight: 700;
+    }
+
+    .listings .item .details {
+    color: #333;
+    font-size: 14px;
+    margin-bottom: 5px;
+    }
+
+    .listings .item .description {
+    font-size: 12px;
+    color: #777;
+    }
+
+    .listings .item.active .title,
+    .listings .item .title:hover {
+    color: #FF5757;
+    }
+
+    .listings .item.active {
+    background-color: #cecece;
+    }
+
+    /* ::-webkit-scrollbar {
+        width: 3px;
+        height: 3px;
+        border-left: 0;
+        background: rgba(0, 0, 0, 0.1);
+    }
+
+    ::-webkit-scrollbar-track {
+        background: none;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #B80202;
+        border-radius: 0;
+    } */
+
+    .mapboxgl-popup-close-button {
+    display: none;
+    }
+
+    .mapboxgl-popup-content {
+    font: 400 15px/22px 'Source Sans Pro', 'Helvetica Neue', sans-serif;
+    padding: 0;
+    width: 180px;
+    }
+
+    .mapboxgl-popup-content h3 {
+    background: #a82424;
+    color: #fff;
+    margin: 0;
+    padding: 10px;
+    border-radius: 3px 3px 0 0;
+    font-weight: 700;
+    margin-top: -15px;
+    }
+
+    .mapboxgl-popup-content h4 {
+    margin: 0;
+    padding: 10px;
+    font-weight: 400;
+    }
+
+    .mapboxgl-popup-content div {
+    padding: 10px;
+    }
+
+    .mapboxgl-popup-anchor-top > .mapboxgl-popup-content {
+    margin-top: 15px;
+    }
+
+    .mapboxgl-popup-anchor-top > .mapboxgl-popup-tip {
+    border-bottom-color: #ad4703;
+    }
+  </style> 
+</head>
+<body>
+    <div class='sidebar'>
+        <div class='heading'>
+          <h1>Puntos en el mapa</h1>
+        </div>
+        <div id='listings' class='listings'></div>
+    </div>
+    <div id="map" class="map"></div>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiMzB2aXRpbiIsImEiOiJjbDV0cnM2Z2EwNXBoM2RxNTdyMm95eTI0In0.calIeuPLdeQGzMZJJS8J6Q';
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/light-v11',
+            center: [-79.5644, 8.9592],
+            zoom: 10 
+        });
+
+        const points = {
+            'type': 'FeatureCollection',
+            'features': [
+                {
+                'type': 'Feature',
+                'properties': {
+                    'title': 'Mi Casa',
+                    'city': 'Panamá Oeste',
+                    'description': 'Donde vivo',
+                    'address': 'Residencial Santillana'
+                },
+                'geometry': {
+                    'coordinates': [
+                    -79.74296052485852,
+                    8.94236496721959
+                    ],
+                    'type':'Point'
+                }
+                },
+                {
+                'type': 'Feature',
+                'properties': {
+                    'title': 'UTP',
+                    'city': 'Panamá',
+                    'description': 'Donde estudio',
+                    'address': 'Tumba Muerto'
+                },
+                'geometry': {
+                    'coordinates': [
+                    -79.53223662038992,
+                    9.022281693836504
+                    ],
+                    'type': 'Point'
+                }
+                },
+                {
+                'type': 'Feature',
+                'properties': {
+                    'title': 'Georgia Tech Panamá',
+                    'city': 'Panamá',
+                    'description': 'Donde trabajo',
+                    'address': 'Calle 50, Edificio Marbella'
+                },
+                'geometry': {
+                    'coordinates': [
+                    -79.52281653285091,
+                    8.977886712134179
+                    ],
+                    'type': 'Point'
+                }
+                }
+            ]
+        }
+
+        points.features.forEach((points, i) => {
+            points.properties.id = i;
+        });
+
+        map.on('load', () => {
+            map.addLayer ({
+                id: 'locations',
+                type: 'circle',
+                source:{
+                    type: 'geojson',
+                    data: points
+                }
+            });
+
+            buildlistPoints(points);
+        });
+
+        
+
+        function buildlistPoints(points) {
+            for (const point of points.features) {
+                const listings = document.getElementById('listings');
+                const listing = listings.appendChild(document.createElement('div'));
+                listing.id = `listing-${point.properties.id}`;
+                listing.className = 'item';
+
+                const title = listing.appendChild(document.createElement('h3'));
+                title.className = 'title';
+                title.innerHTML = point.properties.title;
+
+                const city = listing.appendChild(document.createElement('p'));
+                city.className = 'city';
+                city.innerHTML = point.properties.city;
+
+                const description = listing.appendChild(document.createElement('p'));
+                description.className = 'description';
+                description.innerHTML = point.properties.description;
+
+                const link = listing.appendChild(document.createElement('a'));
+                link.addEventListener('click', function () {
+                    for (const feature of points.features) {
+                        if(this.id === `link-${feature.properties.id}`) {
+                            flyToPoint(feature);
+                            createPopUp(feature);
+                        }
+                    }
+                    const activeItem = document.getElementsByClassNames('active');
+                    if (activeItem[0]) {
+                        activeItem[0].classList.remove('active');
+                    }
+                    this.parentNode.classList.add('active');
+                });
+            }
+        }
+
+        function flyToPoint(currentFeature){
+            map.flyTo({
+                center: currentFeature.geometry.coordinates,
+                zoom: 10
+            });
+        }
+
+        function createPopUp(currentFeature){
+            const popUps = document.getElementsByClassName('mapboxgl-popup');
+            if (popUps[0]) popUps[0].remove();
+
+            const popup = new mapboxgl.Popup({closeOnClick: false})
+                .setLngLat(currentFeature.geometry.coordinates)
+                .setHTML(`<h3>Dirección</h3><h4>${currentFeature.properties.address}</h4>`)
+                .addTo(map)
+        }
+    </script>
+</body>
+</html>
