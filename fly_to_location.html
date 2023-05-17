@@ -104,6 +104,7 @@
     background-color: #cecece;
     }
 
+    /*Este es un css para cuando se agreguen a lista varios items aparezca un scroll bar personalizado con los mismos colores del sidebar*/
     /* ::-webkit-scrollbar {
         width: 3px;
         height: 3px;
@@ -145,6 +146,12 @@
     padding: 10px;
     font-weight: 400;
     }
+    .mapboxgl-popup-content p {
+    margin: 0;
+    padding-left: 10px;
+    font-weight: 400;
+    font-size: small;
+    }
 
     .mapboxgl-popup-content div {
     padding: 10px;
@@ -166,13 +173,18 @@
         </div>
         <div id='listings' class='listings'></div>
     </div>
+    <div className="controls">
+        Longitud: {lng} | Latitude: {lat} | Zoom: {zoom}
+    </div>
     <div id="map" class="map"></div>
     <script>
         mapboxgl.accessToken = 'pk.eyJ1IjoiMzB2aXRpbiIsImEiOiJjbDV0cnM2Z2EwNXBoM2RxNTdyMm95eTI0In0.calIeuPLdeQGzMZJJS8J6Q';
         const map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/mapbox/light-v11',
-            center: [-79.5644, 8.9592],
+            style: 'mapbox://styles/mapbox/streets-v12',
+            center: [-79.5644, 8.8292],
+            bearing: 8,
+            pitch: 45,
             zoom: 10 
         });
 
@@ -234,6 +246,10 @@
             points.properties.id = i;
         });
 
+        map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+        map.addControl(new mapboxgl. ScaleControl(), 'bottom-left');
+
         map.on('load', () => {
             map.addLayer ({
                 id: 'locations',
@@ -247,7 +263,26 @@
             buildlistPoints(points);
         });
 
-        
+        map.on('click', (event) => {
+            const features = map.queryRenderedFeatures(event.point, {
+                layers: ['locations']
+            });
+
+            if (!features.lenght) return;
+
+            const clickedPoint = features[0];
+
+            flyToPoint(clickedPoint);
+
+            createPopUp(clickedPoint);
+
+            const activeItem = document.getElementsByClassName('active');
+            if (activeItem[0]) {
+                activeItem[0].classList.remove('active');
+            }
+            const listing = document.getElementById(`listing-${clickedPoint.properties.id}`);
+            listing.classList.add('active');
+        });
 
         function buildlistPoints(points) {
             for (const point of points.features) {
@@ -256,19 +291,27 @@
                 listing.id = `listing-${point.properties.id}`;
                 listing.className = 'item';
 
-                const title = listing.appendChild(document.createElement('h3'));
-                title.className = 'title';
-                title.innerHTML = point.properties.title;
-
-                const city = listing.appendChild(document.createElement('p'));
-                city.className = 'city';
-                city.innerHTML = point.properties.city;
-
-                const description = listing.appendChild(document.createElement('p'));
-                description.className = 'description';
-                description.innerHTML = point.properties.description;
-
                 const link = listing.appendChild(document.createElement('a'));
+                link.href = '#';
+                link.className = 'title';
+                link.id = `link-${point.properties.id}`;
+                link.innerHTML = `${point.properties.title}`;
+
+                const details = listing.appendChild(document.createElement('div'));
+                details.innerHTML = `${point.properties.city}`;
+
+                // const city = listing.appendChild(document.createElement('p'));
+                // city.className = 'city';
+                // city.innerHTML = point.properties.city;
+
+                // const description = listing.appendChild(document.createElement('p'));
+                // description.className = 'description';
+                // description.innerHTML = point.properties.description;
+
+                // const address = listing.appendChild(document.createElemet('p'));
+                // address.className = 'address';
+                // address.innerHTML = address.properties.address;
+
                 link.addEventListener('click', function () {
                     for (const feature of points.features) {
                         if(this.id === `link-${feature.properties.id}`) {
@@ -276,7 +319,7 @@
                             createPopUp(feature);
                         }
                     }
-                    const activeItem = document.getElementsByClassNames('active');
+                    const activeItem = document.getElementsByClassName('active');
                     if (activeItem[0]) {
                         activeItem[0].classList.remove('active');
                     }
@@ -287,8 +330,11 @@
 
         function flyToPoint(currentFeature){
             map.flyTo({
+                duration: 5000,
                 center: currentFeature.geometry.coordinates,
-                zoom: 10
+                zoom: 15,
+                bearing: 15,
+                pitch: 45,
             });
         }
 
@@ -298,7 +344,7 @@
 
             const popup = new mapboxgl.Popup({closeOnClick: false})
                 .setLngLat(currentFeature.geometry.coordinates)
-                .setHTML(`<h3>Dirección</h3><h4>${currentFeature.properties.address}</h4>`)
+                .setHTML(`<h3>Dirección</h3><h4>${currentFeature.properties.address}</h4><p>${currentFeature.properties.description}</p>`)
                 .addTo(map)
         }
     </script>
