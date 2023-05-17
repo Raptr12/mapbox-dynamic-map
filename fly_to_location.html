@@ -63,7 +63,7 @@
         background-clip: padding-box;
         padding: 6px 12px;
         z-index: 1;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: bold;
         border-radius: 4px;
     }
@@ -193,19 +193,52 @@
     #recenter {
         position: absolute;
         top: 25px;
-        left: 35%;
+        left: 34.5%;
         background-color: #ffffff;
         color: #333333;
         border: 2px solid rgba(196, 196, 196, 0.5);
         background-clip: padding-box;
         padding: 6px 12px;
         z-index: 1;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: bold;
         border-radius: 4px;
     }
     #recenter:hover {
         background-color: #f2f2f2;
+        color: #333;
+    }
+    #menu {
+        position: absolute;
+        bottom: 75px;
+        left: 34.5%;
+        background-color: #ffffff;
+        color: #333333;
+        border: 2px solid rgba(196, 196, 196, 0.5);
+        background-clip: padding-box;
+        z-index: 1;
+        font-size: 10px;
+        font-weight: bold;
+        border-radius: 4px;
+    }
+
+    #menu a { 
+        text-align: center;
+        display: block;
+        margin: 0;
+        padding: 5px;
+        font-size: 13px;
+        text-decoration: none;    
+        border-bottom: 2px solid rgba(196, 196, 196, 0.5);        
+    }
+
+    #menu a:last-child {
+        border: none;
+    }
+
+    #menu a:hover {
+        background-color: #f2f2f2;
+        color: #333;
     }
   </style> 
 </head>
@@ -221,6 +254,10 @@
         Longitud: <span id="lng"></span> | Latitude: <span id="lat"></span> | Zoom: <span id="zoom"></span>
     </div>
     <button id="recenter" onclick="recenterMap()">Recentrar mapa</button>
+    <nav id="menu">
+        <a href="#" id="open-popup">Abrir Popup</a>
+        <a href="#" id="close-popup">Cerrar Popup</a>
+    </nav>
     <script>
         mapboxgl.accessToken = 'pk.eyJ1IjoiMzB2aXRpbiIsImEiOiJjbDV0cnM2Z2EwNXBoM2RxNTdyMm95eTI0In0.calIeuPLdeQGzMZJJS8J6Q';
         const map = new mapboxgl.Map({
@@ -282,6 +319,38 @@
                     ],
                     'type': 'Point'
                 }
+                },
+                {
+                "type": "Feature",
+                "properties": {
+                    'title': 'Puente de las Americas',
+                    'city': 'Panamá',
+                    'description': 'Un puente sobre el canal',
+                    'address': 'Carretera Panamericana'
+                },
+                "geometry": {
+                    "coordinates": [
+                    -79.5650438429979,
+                    8.943202350244675
+                    ],
+                    "type": "Point"
+                }
+                },
+                {
+                "type": "Feature",
+                "properties": {
+                    'title': 'Puente de Centenario',
+                    'city': 'Panamá',
+                    'description': 'Otro puente sobre el canal',
+                    'address': 'Carretera Centenario'
+                },
+                "geometry": {
+                    "coordinates": [
+                    -79.63431168942269,
+                    9.03197591184167
+                    ],
+                    "type": "Point"
+                }
                 }
             ]
         }
@@ -342,6 +411,7 @@
                     );
                     listing.classList.add('active');
                 });
+
             }
         }
 
@@ -399,7 +469,14 @@
         function createPopUp(currentFeature){
             const popUps = document.getElementsByClassName('mapboxgl-popup');
             if (popUps[0]) popUps[0].remove();
-
+            
+            document.getElementById('open-popup').onclick = function(e) {
+                popup.addTo(map);
+            }
+            document.getElementById('close-popup').onclick = function(e) {
+                popup.remove();
+            }
+            
             const popup = new mapboxgl.Popup({closeOnClick: false})
                 .setLngLat(currentFeature.geometry.coordinates)
                 .setHTML(`<h3>Dirección</h3><h4>${currentFeature.properties.address}</h4><p>${currentFeature.properties.description}</p>`)
