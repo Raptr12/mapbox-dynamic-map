@@ -53,13 +53,25 @@
       top: 0;
       bottom: 0;
     }
-  
+    #controls {
+        position: absolute;
+        bottom: 25px;
+        right: 15px;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        padding: 6px 12px;
+        z-index: 1;
+        font-size: 14px;
+        border-radius: 4px;
+    }
     .heading {
       background: #fff;
       border-bottom: 1px solid #eee;
       height: 60px;
       line-height: 60px;
       padding: 0 10px;
+      background-color: #a82424;
+      color: #fff;
     }
 
     .listings {
@@ -80,7 +92,7 @@
 
     .listings .item .title {
     display: block;
-    color: #B80202;
+    color: #a82424;
     font-weight: 700;
     }
 
@@ -97,7 +109,7 @@
 
     .listings .item.active .title,
     .listings .item .title:hover {
-    color: #FF5757;
+    color: #ff3d3d;
     }
 
     .listings .item.active {
@@ -120,6 +132,10 @@
         background: #B80202;
         border-radius: 0;
     } */
+
+    .mapboxgl-popup {
+        padding-bottom: 50px;
+    }
 
     .mapboxgl-popup-close-button {
     display: none;
@@ -164,6 +180,24 @@
     .mapboxgl-popup-anchor-top > .mapboxgl-popup-tip {
     border-bottom-color: #ad4703;
     }
+    .marker {
+        border: none;
+        cursor: pointer;
+        height: 56px;
+        width: 41px;
+        background-image: url(red_pin.png);
+    }
+    #recenter {
+        position: absolute;
+        top: 25px;
+        left: 35%;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        padding: 6px 12px;
+        z-index: 1;
+        font-size: 14px;
+        border-radius: 4px;
+    }
   </style> 
 </head>
 <body>
@@ -173,16 +207,17 @@
         </div>
         <div id='listings' class='listings'></div>
     </div>
-    <div className="controls">
-        Longitud: {lng} | Latitude: {lat} | Zoom: {zoom}
-    </div>
     <div id="map" class="map"></div>
+    <div id="controls">
+        Longitud: <span id="lng"></span> | Latitude: <span id="lat"></span> | Zoom: <span id="zoom"></span>
+    </div>
+    <button id="recenter" onclick="recenterMap()">Recentrar mapa</button>
     <script>
         mapboxgl.accessToken = 'pk.eyJ1IjoiMzB2aXRpbiIsImEiOiJjbDV0cnM2Z2EwNXBoM2RxNTdyMm95eTI0In0.calIeuPLdeQGzMZJJS8J6Q';
         const map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v12',
-            center: [-79.5644, 8.8292],
+            center: [-79.6498, 8.9392],
             bearing: 8,
             pitch: 45,
             zoom: 10 
@@ -246,43 +281,60 @@
             points.properties.id = i;
         });
 
+        const lngElement = document.getElementById('lng');
+        const latElement = document.getElementById('lat');
+        const zoomElement = document.getElementById('zoom');
+        map.on('move', () => {
+            const lng = map.getCenter().lng.toFixed(4);
+            const lat = map.getCenter().lat.toFixed(4);
+            const zoom = map.getZoom().toFixed(2);
+
+            lngElement.innerHTML = lng;
+            latElement.innerHTML = lat;
+            zoomElement.innerHTML = zoom;
+        });
+
         map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
         map.addControl(new mapboxgl. ScaleControl(), 'bottom-left');
 
         map.on('load', () => {
-            map.addLayer ({
-                id: 'locations',
-                type: 'circle',
-                source:{
-                    type: 'geojson',
-                    data: points
-                }
+            map.addSource('places', {
+                type: 'geojson',
+                data: points
             });
 
             buildlistPoints(points);
+            addMarkers();
         });
 
-        map.on('click', (event) => {
-            const features = map.queryRenderedFeatures(event.point, {
-                layers: ['locations']
-            });
+        function addMarkers(){
+            for (const marker of points.features){
+                const pin = document.createElement('div');
+                pin.id = `marker-${marker.properties.id}`;
+                pin.className = 'marker';
 
-            if (!features.lenght) return;
+                new mapboxgl.Marker(pin, {offset:[0, -23]})
+                   .setLngLat(marker.geometry.coordinates)
+                   .addTo(map);
 
-            const clickedPoint = features[0];
+                pin.addEventListener('click', (e) => {
+                    flyToPoint(marker);
+                    createPopUp(marker);
 
-            flyToPoint(clickedPoint);
+                    const activeItem = document.getElementsByClassName('active');
+                    e.stopPropagation();
+                    if (activeItem[0]) {
+                        activeItem[0].classList.remove('active');
+                    }
 
-            createPopUp(clickedPoint);
-
-            const activeItem = document.getElementsByClassName('active');
-            if (activeItem[0]) {
-                activeItem[0].classList.remove('active');
+                    const listing = document.getElementById(
+                        `listing-${marker.properties.id}`
+                    );
+                    listing.classList.add('active');
+                });
             }
-            const listing = document.getElementById(`listing-${clickedPoint.properties.id}`);
-            listing.classList.add('active');
-        });
+        }
 
         function buildlistPoints(points) {
             for (const point of points.features) {
@@ -299,18 +351,6 @@
 
                 const details = listing.appendChild(document.createElement('div'));
                 details.innerHTML = `${point.properties.city}`;
-
-                // const city = listing.appendChild(document.createElement('p'));
-                // city.className = 'city';
-                // city.innerHTML = point.properties.city;
-
-                // const description = listing.appendChild(document.createElement('p'));
-                // description.className = 'description';
-                // description.innerHTML = point.properties.description;
-
-                // const address = listing.appendChild(document.createElemet('p'));
-                // address.className = 'address';
-                // address.innerHTML = address.properties.address;
 
                 link.addEventListener('click', function () {
                     for (const feature of points.features) {
@@ -336,6 +376,15 @@
                 bearing: 15,
                 pitch: 45,
             });
+        }
+
+        function recenterMap() {
+                map.flyTo({
+                    center: [-79.6498, 8.9392],
+                    bearing: 8,
+                    pitch: 45,
+                    zoom: 10 
+                });
         }
 
         function createPopUp(currentFeature){
