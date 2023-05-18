@@ -29,9 +29,11 @@
         mapboxgl.accessToken = 'pk.eyJ1IjoiMzB2aXRpbiIsImEiOiJjbDV0cnM2Z2EwNXBoM2RxNTdyMm95eTI0In0.calIeuPLdeQGzMZJJS8J6Q';
         const map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/mapbox/light-v11',
-            center: [-79.5644, 8.9592],
-            zoom: 14
+            style: 'mapbox://styles/mapbox/streets-v12',
+            center: [-79.5671, 8.9546],
+            zoom: 15,
+            pitch: 45,
+            bearing: 8
         });
 
         const p_balboa_inside = {
@@ -229,6 +231,17 @@
             map.on('mouseleave', 'p_balboa_inside', () => {
                 map.getCanvas().style.cursor = '';
             });
+
+            const centerPoint = turf.centroid(p_balboa_inside);
+            const marker = new mapboxgl.Marker()
+               .setLngLat(centerPoint.geometry.coordinates)
+               .addTo(map);
+
+            marker.getElement().addEventListener('click', () => {
+                const popup = new mapboxgl.Popup()
+                  .setLngLat(centerPoint.geometry.coordinates)
+                  .addTo(map);
+            })
 
             // const layers = ['warehouse_one', 'warehouse_two'];
             // layers.forEach( layerId => {
