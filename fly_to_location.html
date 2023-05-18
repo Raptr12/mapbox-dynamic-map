@@ -477,7 +477,7 @@
                 popup.remove();
             }
             
-            const popup = new mapboxgl.Popup({closeOnClick: false})
+            const popup = new mapboxgl.Popup({closeOnClick: true})
                 .setLngLat(currentFeature.geometry.coordinates)
                 .setHTML(`<h3>Dirección</h3><h4>${currentFeature.properties.address}</h4><p>${currentFeature.properties.description}</p>`)
                 .addTo(map)
