@@ -1,274 +1,191 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<title>polygon</title>
-<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-<link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
-<script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
-<style>
-    body { 
-        margin: 0; 
-        padding: 0; 
-    }
-    #map { 
-        position: absolute; 
-        top: 0; 
-        bottom: 0; 
-        width: 100%; 
-    }
-    .marker {
-        background-image: url('mapbox-icon.png');
-        background-size: cover;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        cursor: pointer;
-    }
-    .mapboxgl-popup {
-        max-width: 200px;
-    }
-    .mapboxgl-popup-content {
-        text-align: center;
-        font-family: 'Open Sans', sans-serif;
-    }
-</style>
-</head>
-<body>
-<div id="map"></div>
-<script>
-	mapboxgl.accessToken = 'pk.eyJ1IjoiMzB2aXRpbiIsImEiOiJjbDV0cnM2Z2EwNXBoM2RxNTdyMm95eTI0In0.calIeuPLdeQGzMZJJS8J6Q';
-    const map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/mapbox/light-v11',
-        center: [-79.5644, 8.9592],
-        zoom: 14 
-    });
 
-    map.on('load', () => {
-        map.addSource('Puerto Balboa', {
-            'type': 'geojson',
-            'data': {
-                'type': 'Feature',
-                'properties':{
-                    'title': 'Puerto Balboa',
-                    'description': 'Uno de los puertos que hay en Panamá'
-                },
-                'geometry': {
-                    'type': 'Polygon',
-                    'coordinates': [
-                        [
-                            [   -79.57068733294194,
-                                8.964444857320586
-                            ],
-                            [
-                                -79.56401473141986,
-                                8.956835764741811
-                            ],
-                            [
-                                -79.56770831711661,
-                                8.952960809198856
-                            ],
-                            [
-                                -79.5673827997175,
-                                8.952637001420612
-                            ],
-                            [
-                                -79.5668574325154,
-                                8.95318215035796
-                            ],
-                            [
-                                -79.56661752992227,
-                                8.95276591506132
-                            ],
-                            [
-                                -79.56697965946039,
-                                8.952420044957634
-                            ],
-                            [
-                                -79.56689907189238,
-                                8.952332942786057
-                            ],
-                            [
-                                -79.56643605850826,
-                                8.95279979074563
-                            ],
-                            [
-                                -79.56633370595875,
-                                8.952712343906597
-                            ],
-                            [
-                                -79.5668054507091,
-                                8.952226290451307
-                            ],
-                            [
-                                -79.5669697698223,
-                                8.952020670876621
-                            ],
-                            [
-                                -79.56689016838585,
-                                8.951941804938613
-                            ],
-                            [
-                                -79.5660597212776,
-                                8.952786847679477
-                            ],
-                            [
-                                -79.56590413490368,
-                                8.952746890801762
-                            ],
-                            [
-                                -79.56583627401196,
-                                8.952616203448954
-                            ],
-                            [
-                                -79.56668697925659,
-                                8.951745328267165
-                            ],
-                            [
-                                -79.56662317153332,
-                                8.951689730561242
-                            ],
-                            [
-                                -79.56672604454441,
-                                8.95158403285565
-                            ],
-                            [
-                                -79.56664915927675,
-                                8.951515587295688
-                            ],
-                            [
-                                -79.56576942679132,
-                                8.952486627498189
-                            ],
-                            [
-                                -79.5657097731028,
-                                8.952436545328553
-                            ],
-                            [
-                                -79.56565562181335,
-                                8.952479929193046
-                            ],
-                            [
-                                -79.56564975722651,
-                                8.952506278178205
-                            ],
-                            [
-                                -79.56393306027879,
-                                8.954369613451888
-                            ],
-                            [
-                                -79.5638812283215,
-                                8.954305330978329
-                            ],
-                            [
-                                -79.56365895523439,
-                                8.954534625985005
-                            ],
-                            [
-                                -79.56306586323853,
-                                8.954592971002754
-                            ],
-                            [
-                                -79.56061749001641,
-                                8.957207109394403
-                            ],
-                            [
-                                -79.5611046919874,
-                                8.95858773193929
-                            ],
-                            [
-                                -79.56186721335017,
-                                8.959393325818198
-                            ],
-                            [
-                                -79.56191776094482,
-                                8.959620391860526
-                            ],
-                            [
-                                -79.56230892598869,
-                                8.95990932112602
-                            ],
-                            [
-                                -79.56338397330646,
-                                8.961152182362866
-                            ],
-                            [
-                                -79.5632266599022,
-                                8.961513029877707
-                            ],
-                            [
-                                -79.56630409145139,
-                                8.964920678917025
-                            ],
-                            [
-                                -79.56893128064648,
-                                8.96500163745506
-                            ],
-                            [
-                                -79.5700529196645,
-                                8.964871452939079
-                            ],
-                            [
-                                -79.57046535837696,
-                                8.964726212384122
-                            ],
-                            [
-                                -79.57069004646988,
-                                8.964448022298
-                            ]
-                        ]
-                    ]
-                }
-            }
+<head>
+    <meta charset="utf-8">
+    <title>polygon</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+    <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .mapboxgl-popup {
+            max-width: 200px;
+        }
+
+        .mapboxgl-popup-content {
+            text-align: center;
+            font-family: 'Open Sans', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiMzB2aXRpbiIsImEiOiJjbDV0cnM2Z2EwNXBoM2RxNTdyMm95eTI0In0.calIeuPLdeQGzMZJJS8J6Q';
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/light-v11',
+            center: [-79.5644, 8.9592],
+            zoom: 14
         });
 
-        map.on('click', 'Puerto Balboa', (e) => {
-            const features = map.queryRenderedFeatures(e.point, { layers: ['Puerto Balboa'] });
-
-            if (!features.length) {
-                return;
-            }
-            features.forEach((feature) => {
+        const puerto = {
+            "type": "FeatureCollection",
+                    "features": [
+                        {
+                            "type": "Feature",
+                            "properties": {
+                                "title": "Puerto Balboa",
+                                "description": "El área del Puerto Balboa"
+                            },
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        [-79.57071771782958, 8.964478939011485],
+                                        [-79.57045807625245, 8.964706285305567],
+                                        [-79.57000690828592, 8.964858627278716],
+                                        [-79.56889280433988, 8.964992247999646],
+                                        [-79.5663431857662, 8.964922484049794],
+                                        [-79.563278787758, 8.96156816643996],
+                                        [-79.56337015304679, 8.96111620548352],
+                                        [-79.5623345925315, 8.959914982017636],
+                                        [-79.56191548376307, 8.959607731994566],
+                                        [-79.56186398850002, 8.959321881418532],
+                                        [-79.56110194021744, 8.958549142255634],
+                                        [-79.56102390569473, 8.958010651027791],
+                                        [-79.56062312132559, 8.957224377102833],
+                                        [-79.56308140290757, 8.954580652006996],
+                                        [-79.56436329112029, 8.951122631791904],
+                                        [-79.56496819341956, 8.950267033368391],
+                                        [-79.56535618639784, 8.949581483831452],
+                                        [-79.56544992505233, 8.948920408393946],
+                                        [-79.56492867395767, 8.948399417301275],
+                                        [-79.56489685180013, 8.947845214986458],
+                                        [-79.56532023422159, 8.947724560217253],
+                                        [-79.56544931481963, 8.947784065612538],
+                                        [-79.56599307673626, 8.947792019331459],
+                                        [-79.56622657058514, 8.947753304908659],
+                                        [-79.56653523466952, 8.947615907073484],
+                                        [-79.56658164371497, 8.947535598571108],
+                                        [-79.56671277159771, 8.947588595490728],
+                                        [-79.56681160130357, 8.9477982214556],
+                                        [-79.56697644286436, 8.947777350231178],
+                                        [-79.56718025935619, 8.949864989780849],
+                                        [-79.56520183756871, 8.952005472683908],
+                                        [-79.56546861846354, 8.952219182323617],
+                                        [-79.56350804846063, 8.95433052461155],
+                                        [-79.563578318045, 8.954528439675002],
+                                        [-79.56391152891936, 8.954388167564645],
+                                        [-79.56571381313559, 8.952433790117425],
+                                        [-79.56577503876997, 8.952490069675974],
+                                        [-79.56665485602952, 8.951521038628456],
+                                        [-79.56673014269765, 8.95157873021536],
+                                        [-79.56662998510949, 8.951698377917097],
+                                        [-79.56668472864358, 8.951739110214476],
+                                        [-79.56584822837708, 8.952614318658362],
+                                        [-79.56590160614505, 8.952749430309993],
+                                        [-79.56605817196649, 8.952774328423885],
+                                        [-79.56689471697861, 8.9519371266138],
+                                        [-79.5669845636039, 8.9520064396293],
+                                        [-79.5668043076374, 8.952236735669729],
+                                        [-79.56634605867387, 8.952725836622093],
+                                        [-79.5664459115883, 8.952808172289792],
+                                        [-79.56690133879181, 8.952322593626661],
+                                        [-79.56698302619573, 8.952398190284057],
+                                        [-79.56662151102445, 8.952778428299723],
+                                        [-79.56663266860346, 8.952951996491166],
+                                        [-79.566857662979, 8.95318285502492],
+                                        [-79.56738206734907, 8.95263239540644],
+                                        [-79.5677240011122, 8.952937714377896],
+                                        [-79.56402976170811, 8.956847093584443],
+                                        [-79.57071771782958, 8.964478939011485]
+                                    ]
+                                ],
+                                "type": "Polygon"
+                            }
+                        }
+                    ]
+        }
+        map.on('load', () => {
+            map.addSource('Puerto Balboa', {
+                'type': 'geojson',
+                'data': puerto
+            });
+            
+            const centerMass = turf.centroid(puerto);
+            const marker = new mapboxgl.Marker()
+               .setLngLat(centerMass.geometry.coordinates)
+               .addTo(map);
+            marker.getElement().addEventListener('click', () => {
                 const popup = new mapboxgl.Popup()
-                    .setLngLat(e.lngLat)
+                    .setLnfLat(centerMass.geometry.coordinates)
                     .setHTML(`<h3>${feature.properties.title}</h3><p>${feature.properties.description}</p>`)
                     .addTo(map);
             });
-        });
 
-        map.addLayer({
-            'id': 'Puerto Balboa',
-            'type': 'fill',
-            'source': 'Puerto Balboa',
-            'layout': {},
-            'paint': {
-                'fill-color': '#0080ff', 
-                'fill-opacity': 0.5
-            }
-        });
+            map.on('click', 'Puerto Balboa', (e) => {
+                const features = map.queryRenderedFeatures(e.point, { layers: ['Puerto Balboa'] });
 
-        map.addLayer({
-            'id': 'outline',
-            'type': 'line',
-            'source': 'Puerto Balboa',
-            'layout': {},
-            'paint': {
-                'line-color': '#000',
-                'line-width': 2
-            }
-        });
+                if (!features.length) {
+                    return;
+                }
+                features.forEach((feature) => {
+                    const popup = new mapboxgl.Popup()
+                        .setLngLat(e.lngLat)
+                        .setHTML(`<h3>${feature.properties.title}</h3><p>${feature.properties.description}</p>`)
+                        .addTo(map);
+                });
+            });
 
-        // Funciones del cursor cuando entra y sale del rang del poligono
-        map.on('mouseenter', 'Puerto Balboa', () => {
-        map.getCanvas().style.cursor = 'pointer';
-        });
 
-        map.on('mouseleave', 'Puerto Balboa', () => {
-        map.getCanvas().style.cursor = '';
+
+            map.addLayer({
+                'id': 'Puerto Balboa',
+                'type': 'fill',
+                'source': 'Puerto Balboa',
+                'layout': {},
+                'paint': {
+                    'fill-color': '#0080ff',
+                    'fill-opacity': 0.5
+                }
+            });
+
+            map.addLayer({
+                'id': 'outline',
+                'type': 'line',
+                'source': 'Puerto Balboa',
+                'layout': {},
+                'paint': {
+                    'line-color': '#000',
+                    'line-width': 2
+                }
+            });
+
+            // Funciones del cursor cuando entra y sale del rango del poligono
+            map.on('mouseenter', 'Puerto Balboa', () => {
+                map.getCanvas().style.cursor = 'pointer';
+            });
+
+            map.on('mouseleave', 'Puerto Balboa', () => {
+                map.getCanvas().style.cursor = '';
+            });
         });
-    });
-</script>
+    </script>
 
 </body>
+
 </html>
